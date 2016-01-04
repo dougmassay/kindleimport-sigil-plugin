@@ -1,0 +1,1 @@
+# kindleimport-sigil-plugin
