@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>KindleImport</name>
+  <type>input</type>
+  <author>DiapDealer</author>
+  <description>Open Kindle files for editing in Sigil</description>
+  <engine>python3.4</engine>
+  <engine>python2.7</engine>
+  <version>0.80.3</version>
+  <oslist>osx,unx,win</oslist>
+  <autostart>false</autostart>
+  <autoclose>false</autoclose>
+</plugin>
