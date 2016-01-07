@@ -8,6 +8,6 @@
   <engine>python2.7</engine>
   <version>0.80.3</version>
   <oslist>osx,unx,win</oslist>
-  <autostart>false</autostart>
-  <autoclose>false</autoclose>
+  <autostart>true</autostart>
+  <autoclose>true</autoclose>
 </plugin>

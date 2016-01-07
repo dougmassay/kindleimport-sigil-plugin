@@ -30,7 +30,7 @@ PLUG_DIR = os.path.dirname(SCRIPT_DIR)
 print (PLUG_DIR)
 '''
 
-_DEBUG_ = True
+_DEBUG_ = False
 
 prefs = {}
 
