@@ -9,7 +9,7 @@ Links
 
 * Sigil website is at http://sigil-ebook.com
 * The KindleUnpack python-based software can be found at https://github.com/kevinhendricks/KindleUnpack
-* python-patch (used to help build the plugin) can be found at http://code.google.com/p/python-patch/
+* python-patch (used to help build the plugin) can be found at https://github.com/techtonik/python-patch
 
 Building
 ========
