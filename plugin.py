@@ -73,13 +73,17 @@ def fileChooser():
 def run(bk):
     global prefs
     prefs = bk.getPrefs()
-    # set a default preference value
-    prefs.defaults['use_file_path'] = expanduser('~')
-    prefs.defaults['epub_version'] = "2"
+    # set default preference values
+    if 'use_file_path' not in prefs:
+        prefs['use_file_path'] = expanduser('~')
+    if 'azw3_epub_version' not in prefs:
+        prefs['azw3_epub_version'] = "2"
+    if 'use_src_from_dual_mobi' not in prefs:
+        prefs['use_src_from_dual_mobi'] = 1
 
     if _DEBUG_:
         print('Python sys.path', sys.path)
-        print('default version:', prefs['epub_version'])
+        print('Default AZW3 epub version:', prefs['azw3_epub_version'])
 
     inpath = fileChooser()
     if inpath == '' or not os.path.exists(inpath):
@@ -93,7 +97,7 @@ def run(bk):
         return -1
 
     mobionly = False
-    mp = mobiProcessor(inpath, prefs['epub_version'])
+    mp = mobiProcessor(inpath, prefs['azw3_epub_version'])
     # Save last directory accessed to JSON prefs
     prefs['use_file_path'] = pathof(os.path.dirname(inpath))
     if mp.isEncrypted:
@@ -108,7 +112,7 @@ def run(bk):
     with make_temp_directory() as temp_dir:
         if not mobionly:
             epub, src = mp.unpackEPUB(temp_dir)
-            if src is not None and isEPUB(src):
+            if src is not None and isEPUB(src) and prefs['use_src_from_dual_mobi']:
                 print ('Using included kindlegen sources.')
                 epub = src
         else:
@@ -118,7 +122,6 @@ def run(bk):
             epub = qe.makeEPUB()
 
         # Save prefs to json
-        prefs['epub_version'] = prefs['epub_version']
         bk.savePrefs(prefs)
         print ('Path to epub or src {0}'.format(epub))
         with file_open(epub,'rb')as fp:
