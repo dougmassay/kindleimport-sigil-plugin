@@ -85,10 +85,10 @@ for patch in patchfiles:
             print(parsedPatchSet.diffstat())
         else:
             os.chdir('..')
-            sys.exit('Cannot apply patch KindleUnpack file(s)!')
+            sys.exit('Cannot apply patch to KindleUnpack file(s)!')
     else:
         os.chdir('..')
-        sys.exit('Cannot patch KindleUnpack file(s)!')
+        sys.exit('Cannot parse patch file(s)!')
 
 if os.path.exists(FILE_NAME) and os.path.isfile(FILE_NAME):
     os.remove(FILE_NAME)
