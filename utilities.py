@@ -5,6 +5,7 @@ from __future__ import unicode_literals, division, absolute_import, print_functi
 
 import sys
 import os
+import re
 
 PY2 = sys.version_info[0] == 2
 
@@ -58,3 +59,14 @@ if PY2 and sys.platform.startswith("win"):
             return buf.value
 else:
     expanduser = os.path.expanduser
+
+def find_output_encoding(opffile):
+    with file_open(opffile, 'r', encoding='utf-8') as fp:
+        ml = fp.read()
+        match = re.search(r'''<meta\s+name="output encoding"\s+content="([^>]*)"\s?/>''', ml)
+        if match.group(1) is not None:
+            return match.group(1)
+        match = re.search(r'''<meta\s+content="([^>]*)"\s+name="output encoding"\s?/>''', ml)
+        if match.group(1) is not None:
+            return match.group(1)
+        return None

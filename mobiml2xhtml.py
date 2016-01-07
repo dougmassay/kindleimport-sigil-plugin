@@ -29,7 +29,7 @@ class MobiMLConverter(object):
     PAGE_BREAK_PAT = re.compile(r'(<[/]{0,1}mbp:pagebreak\s*[/]{0,1}>)+', re.IGNORECASE)
     IMAGE_ATTRS = ('lowrecindex', 'recindex', 'hirecindex')
 
-    def __init__(self, filename):
+    def __init__(self, filename, out_enc):
         self.base_css_rules =  'blockquote { margin: 0em 0em 0em 1.25em }\n'
         self.base_css_rules += 'p { margin: 0em }\n'
         self.base_css_rules += '.bold { font-weight: bold }\n'
@@ -39,7 +39,24 @@ class MobiMLConverter(object):
         self.tag_css_rule_cnt = 0
         self.path = []
         self.filename = filename
-        self.wipml = file_open(self.filename, 'r', encoding='utf-8').read()
+
+        if out_enc is not None:
+            try:
+                self.wipml = file_open(self.filename, 'r', encoding=out_enc).read()
+            except UnicodeDecodeError:
+                out_enc = None
+        if out_enc is None:
+            encodings = ['utf-8', 'windows-1252']
+            for enc in encodings:
+                try:
+                    self.wipml = file_open(self.filename, 'r', encoding=enc).read()
+                    print ('Guessing markup character encoding')
+                    break
+                except UnicodeDecodeError:
+                    next
+        if out_enc is None:
+            raise
+
         self.pos = 0
         self.opfname = self.filename.rsplit('.',1)[0] + '.opf'
         self.opos = 0
@@ -458,9 +475,6 @@ class MobiMLConverter(object):
                     self.current_font_size = int(sz)
 
         elif tname == 'img':
-            if 'alt' not in tattr.keys():
-                tattr['alt'] = ""
-
             for attr in ('width', 'height'):
                 if attr in tattr:
                     val = tattr[attr]

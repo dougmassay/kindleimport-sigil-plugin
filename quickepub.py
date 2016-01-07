@@ -5,7 +5,7 @@ from __future__ import unicode_literals, division, absolute_import, print_functi
 
 import os
 import zipfile
-from utilities import file_open
+from utilities import file_open, find_output_encoding
 from kindleunpackcore.compatibility_utils import unicode_str
 from mobiml2xhtml import MobiMLConverter
 
@@ -54,7 +54,9 @@ class QuickEpub(object):
                 self.zipUpDir(myzip, tdir, localfilePath)
 
     def makeEPUB(self):
-        ml2html = MobiMLConverter(self.htmlfile)
+        out_enc = find_output_encoding(self.opffile)
+        print ('Markup encoded as:', out_enc)
+        ml2html = MobiMLConverter(self.htmlfile, out_enc)
         xhtmlstr, css, cssname = ml2html.processml()
         file_open(self.htmlfile,'wb').write(xhtmlstr.encode('utf-8'))
         if has_cssutils:
@@ -71,11 +73,11 @@ class QuickEpub(object):
                 if line.startswith('<item'):
                     if line.find('text/x-oeb1-document'):
                         line = line.replace('text/x-oeb1-document', 'application/xhtml+xml')
-                        if line.find('text/html'):
-                            line = line.replace('text/html', 'application/xhtml+xml')
-                    newopf += line
-                    if line.startswith('<manifest>'):
-                        newopf += '<item id="css_file" media-type="text/css" href="styles.css" />\n'
+                    if line.find('text/html'):
+                        line = line.replace('text/html', 'application/xhtml+xml')
+                newopf += line
+                if line.startswith('<manifest>'):
+                    newopf += '<item id="css_file" media-type="text/css" href="styles.css" />\n'
 
         file_open(self.opffile,'wb').write(newopf.encode('utf-8'))
 
