@@ -72,7 +72,7 @@ class MobiHeaderLight:
         return False
 
 class mobiProcessor:
-    def __init__(self, infile, ePubVersion=2):
+    def __init__(self, infile, ePubVersion='2', useHDImages=True):
         self.infile = infile
         self.sect = SectionizerLight(self.infile)
         if (self.sect.ident != b'BOOKMOBI' and self.sect.ident != b'TEXtREAd') or self.sect.ident == 'TPZ':
@@ -89,7 +89,7 @@ class mobiProcessor:
         self.isKF8 = mhl.isKF8()
         self.isComboFile = mhl.isJointFile()
         self.ePubVersion = ePubVersion
-        self.useHDImages = True
+        self.useHDImages = useHDImages
 
     def unpackMOBI(self, outdir):
         _mu.unpackBook(self.infile, outdir, epubver=self.ePubVersion, use_hd=self.useHDImages)

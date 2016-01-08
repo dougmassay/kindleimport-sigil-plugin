@@ -77,9 +77,11 @@ def run(bk):
     if 'use_file_path' not in prefs:
         prefs['use_file_path'] = expanduser('~')
     if 'azw3_epub_version' not in prefs:
-        prefs['azw3_epub_version'] = "2"
+        prefs['azw3_epub_version'] = "2"  # A, F, 2 or 3
+    if 'use_hd_images' not in prefs:
+        prefs['use_hd_images'] = True
     if 'use_src_from_dual_mobi' not in prefs:
-        prefs['use_src_from_dual_mobi'] = 1
+        prefs['use_src_from_dual_mobi'] = True
 
     if _DEBUG_:
         print('Python sys.path', sys.path)
@@ -97,7 +99,7 @@ def run(bk):
         return -1
 
     mobionly = False
-    mp = mobiProcessor(inpath, prefs['azw3_epub_version'])
+    mp = mobiProcessor(inpath, prefs['azw3_epub_version'],  prefs['use_hd_images'])
     # Save last directory accessed to JSON prefs
     prefs['use_file_path'] = pathof(os.path.dirname(inpath))
     if mp.isEncrypted:
