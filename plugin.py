@@ -90,7 +90,7 @@ def run(bk):
     inpath = fileChooser()
     if inpath == '' or not os.path.exists(inpath):
         print('No input file selected!')
-        return -1
+        return 0
 
     print ('Path to Kindlebook {0}'.format(inpath))
     from mobi_stuff import mobiProcessor, topaz
