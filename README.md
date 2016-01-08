@@ -1,8 +1,9 @@
 KindleImport (A Sigil Plugin)
 ============
 
-A Sigil plugin based on/wrapped around the KindleUnpack software. 
-(python based software to unpack Amazon / Kindlegen generated ebooks)
+Open KindleBooks in Sigil
+
+A Sigil plugin based on/wrapped around the KindleUnpack software (Python based software to unpack Amazon / Kindlegen generated ebooks).
 
 Links
 =====
@@ -35,7 +36,7 @@ This will create the KindleImport_vX.X.X.zip file that can then be installed int
 Contributing / Modifying
 ============
 
-Any changes to files in the kindleunpackcore folder will be ignored. The repository is setup to ignore folder (meaning git won't track them). If you have modifications to suggest for those files, do so upstream at https://github.com/kevinhendricks/KindleUnpack.
+Any changes to files in the kindleunpackcore folder will be ignored. The repository is setup to ignore this folder (meaning git won't track changes to them). If you have modifications to suggest for those files, do so upstream at https://github.com/kevinhendricks/KindleUnpack.
 
 Any changes there can be pulled into this repository by running the getkucore.py script in the 'setup_tools' folder.
 
