@@ -8,17 +8,17 @@ from __future__ import (unicode_literals, division, absolute_import,
 import os
 import sys
 import re
-import glob
 import shutil
 import inspect
 import zipfile
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-KU_DIR = os.path.join(SCRIPT_DIR, 'kindleunpackcore')
-TEMP_DIR = os.path.join(SCRIPT_DIR, 'KindleImport')
+PLUGIN_NAME = 'KindleImport'
+TEMP_DIR = os.path.join(SCRIPT_DIR, PLUGIN_NAME)
 
-PLUGIN_FILES = ['mobiml2xhtml.py',
+PLUGIN_FILES = ['kindleunpackcore',
+            'mobiml2xhtml.py',
             'mobi_stuff.py',
             'plugin.py',
             'plugin.xml',
@@ -36,7 +36,7 @@ def findVersion():
 
 # Find version info from plugin.xml and build zip file name from it
 VERS_INFO =  findVersion()
-PLUGIN_NAME = os.path.join(SCRIPT_DIR, 'KindleImport_v{}.zip'.format(VERS_INFO))
+ARCHIVE_NAME = os.path.join(SCRIPT_DIR, '{}_v{}.zip'.format(PLUGIN_NAME, VERS_INFO))
 
 
 # recursive zip creation support routine
@@ -54,17 +54,15 @@ def zipUpDir(myzip, tdir, localname):
         elif os.path.isdir(realfilePath):
             zipUpDir(myzip, tdir, localfilePath)
 
-def removePreviousKI(rmzip=False):
-    # Remove temp KindleImport folder and contents if it exists
+def removePreviousTmp(rmzip=False):
+    # Remove temp folder and contents if it exists
     if os.path.exists(TEMP_DIR) and os.path.isdir(TEMP_DIR):
         shutil.rmtree(TEMP_DIR)
 
-    if rmzip:
-        print ('Removing any leftover zip files ...')
-        for each in glob.glob('KindleImport_v*.zip'):
-            path = os.path.join(SCRIPT_DIR, each)
-            if os.path.exists(path):
-                os.remove(path)
+    if rmzip:  # Remove zip file if indicated.
+        print ('Removing any current zip file ...')
+        if os.path.exists(ARCHIVE_NAME):
+            os.remove(ARCHIVE_NAME)
 
 def ignore_in_dirs(base, items, ignored_dirs=None):
     ans = []
@@ -76,35 +74,33 @@ def ignore_in_dirs(base, items, ignored_dirs=None):
             if name in ignored_dirs:
                 ans.append(name)
         else:
-            if name.rpartition('.')[-1] not in ('py'):
+            if name.rpartition('.')[-1] in ('pyc', 'pyo'):
                 ans.append(name)
     return ans
 
 if __name__ == "__main__":
     print('Removing any previous build leftovers ...')
-    removePreviousKI(rmzip=True)
+    removePreviousTmp(rmzip=True)
 
-    # Copy everything to temp directory
-    print ('Copying \'kindleunpackcore\' directory to temporary \'KindleImport\' ...')
-    try:
-        shutil.copytree(KU_DIR, os.path.join(TEMP_DIR, os.path.basename(KU_DIR)), ignore=ignore_in_dirs)
-    except:
-        sys.exit('Couldn\'t copy necessary kindleunpackcore directory!')
-    files = os.listdir(SCRIPT_DIR)
+    print ('Creating temp {} directory ...'.format(PLUGIN_NAME))
+    os.mkdir(TEMP_DIR)
 
-    print ('Copying plugin files to temporary \'KindleImport\' ...')
-    try:
-        for entry in PLUGIN_FILES:
-            shutil.copy2(os.path.join(SCRIPT_DIR, entry), os.path.join(TEMP_DIR, entry))
-    except:
-        sys.exit('Couldn\'t copy necessary plugin files!')
+    print ('Copying everything to temp {} directory ...'.format(PLUGIN_NAME))
+    for entry in PLUGIN_FILES:
+        entry_path = os.path.join(SCRIPT_DIR, entry)
+        if os.path.exists(entry_path) and os.path.isdir(entry_path):
+            shutil.copytree(entry_path, os.path.join(TEMP_DIR, entry), ignore=ignore_in_dirs)
+        elif os.path.exists(entry_path) and os.path.isfile(entry_path):
+            shutil.copy2(entry_path, os.path.join(TEMP_DIR, entry))
+        else:
+            sys.exit('Couldn\'t copy necessary plugin files!')
 
     print ('Creating {} ...'.format(os.path.basename(PLUGIN_NAME)))
-    outzip = zipfile.ZipFile(PLUGIN_NAME, 'w')
+    outzip = zipfile.ZipFile(ARCHIVE_NAME, 'w')
     zipUpDir(outzip, SCRIPT_DIR, os.path.basename(TEMP_DIR))
     outzip.close()
 
     print ('Plugin successfully created!')
 
     print('Removing temp build directory ...')
-    removePreviousKI()
+    removePreviousTmp()
