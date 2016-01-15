@@ -57,6 +57,8 @@ Files used for building/maintaining the plugin:
 
     > buildplugin.py  -- this is used to build the plugin.
     > setup.cfg -- used for flake8 style checking. Use it to see if your code complies.
+    > checkversion.xml -- used by automatic update checking (not yet implemented).
+    > setup_tools/getkucore.py  -- used to retrieve/prepare upstream KindleUnpack files.
     > setup_tools/pythonpatch.py  -- used by setup.py to apply patches to upstream files if necessary. 
     > setup_tools/kindleunpack.patch  -- patch that will be applied to kindleunpackcore/kindleunpack.py
     > setup_tools/mobi_nav.patch  -- patch that will be applied to kindleunpackcore/mobi_nav.py
