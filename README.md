@@ -35,6 +35,9 @@ This will create the KindleImport_vX.X.X.zip file that can then be installed int
     
 Contributing / Modifying
 ============
+From here on out, a proficiency with developing / creating Sigil plugins is assumed.
+If you need a crash-course, an introduction to creating Sigil plugins is available at
+http://www.mobileread.com/forums/showthread.php?t=251452.
 
 Any changes to files in the kindleunpackcore folder will be ignored. The repository is setup to ignore this folder (meaning git won't track changes to them). If you have modifications to suggest for those files, do so upstream at https://github.com/kevinhendricks/KindleUnpack.
 
@@ -48,6 +51,15 @@ The core plugin files (this is where most contributors will spend their time) ar
     > plugin.xml
     > quickepub.py
     > utilities.py
+
+    
+Files used for building/maintaining the plugin:
+
+    > buildplugin.py  -- this is used to build the plugin.
+    > setup.cfg -- used for flake8 style checking. Use it to see if your code complies.
+    > setup_tools/pythonpatch.py  -- used by setup.py to apply patches to upstream files if necessary. 
+    > setup_tools/kindleunpack.patch  -- patch that will be applied to kindleunpackcore/kindleunpack.py
+    > setup_tools/mobi_nav.patch  -- patch that will be applied to kindleunpackcore/mobi_nav.py
 
 Feel free to fork the repository and submit pull requests (or just use it privately to experiment).
 
