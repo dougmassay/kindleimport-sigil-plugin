@@ -95,7 +95,7 @@ if __name__ == "__main__":
         else:
             sys.exit('Couldn\'t copy necessary plugin files!')
 
-    print ('Creating {} ...'.format(os.path.basename(PLUGIN_NAME)))
+    print ('Creating {} ...'.format(os.path.basename(ARCHIVE_NAME)))
     outzip = zipfile.ZipFile(ARCHIVE_NAME, 'w')
     zipUpDir(outzip, SCRIPT_DIR, os.path.basename(TEMP_DIR))
     outzip.close()
