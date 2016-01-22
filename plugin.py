@@ -118,12 +118,14 @@ def run(bk):
     inpath = fileChooser()
     if inpath == '' or not os.path.exists(inpath):
         print('No input file selected!')
+        bk.savePrefs(prefs)
         return 0
 
     print ('Path to Kindlebook {0}'.format(inpath))
     from mobi_stuff import mobiProcessor, topaz
     if topaz(inpath):
         print('Kindlebook is in Topaz format: can\'t open!')
+        bk.savePrefs(prefs)
         return -1
 
     mobionly = False
@@ -132,9 +134,11 @@ def run(bk):
     prefs['use_file_path'] = pathof(os.path.dirname(inpath))
     if mp.isEncrypted:
         print('Kindlebook is encrypted: can\'t open!')
+        bk.savePrefs(prefs)
         return -1
     if mp.isPrintReplica:
         print('Kindlebook is a Print Replica: can\'t open!')
+        bk.savePrefs(prefs)
         return -1
     if not mp.isComboFile and not mp.isKF8:
         mobionly = True
