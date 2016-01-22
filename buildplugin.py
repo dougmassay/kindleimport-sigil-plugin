@@ -23,6 +23,7 @@ PLUGIN_FILES = ['kindleunpackcore',
             'plugin.py',
             'plugin.xml',
             'quickepub.py',
+            'updatecheck.py',
             'utilities.py']
 
 def findVersion():

@@ -7,18 +7,22 @@ import os
 import sys
 import zipfile
 from contextlib import contextmanager
+from datetime import datetime, timedelta
 
 
 from kindleunpackcore.compatibility_utils import PY2, unicode_str
 from kindleunpackcore.unipath import pathof
 from utilities import expanduser, file_open
+from updatecheck import UpdateChecker
 
 if PY2:
     from Tkinter import Tk
     import tkFileDialog as tkinter_filedialog
+    import tkMessageBox as tkinter_msgbox
 else:
     from tkinter import Tk
     import tkinter.filedialog as tkinter_filedialog
+    import tkinter.messagebox as tkinter_msgbox
 
 '''
 import inspect
@@ -70,9 +74,17 @@ def fileChooser():
     localRoot.quit()
     return tkinter_filedialog.askopenfilename(**file_opt)
 
+def update_msgbox(title, msg):
+    localRoot = Tk()
+    localRoot.withdraw()
+    localRoot.option_add('*font', 'Helvetica -12')
+    localRoot.quit()
+    return tkinter_msgbox.showinfo(title, msg)
+
 def run(bk):
     global prefs
     prefs = bk.getPrefs()
+
     # set default preference values
     if 'use_file_path' not in prefs:
         prefs['use_file_path'] = expanduser('~')
@@ -82,6 +94,22 @@ def run(bk):
         prefs['use_hd_images'] = True
     if 'use_src_from_dual_mobi' not in prefs:
         prefs['use_src_from_dual_mobi'] = True
+
+    if 'last_time_checked' not in prefs:
+        prefs['last_time_checked'] = str(datetime.now() - timedelta(hours=7))
+    if 'last_online_version' not in prefs:
+        prefs['last_online_version'] = '0.1.0'
+
+    chk = UpdateChecker(prefs['last_time_checked'], prefs['last_online_version'], bk._w)
+    update_available, online_version, time = chk.update_info()
+    # update preferences with latest date/time/version
+    prefs['last_time_checked'] = time
+    if online_version is not None:
+        prefs['last_online_version'] = online_version
+    if update_available:
+        title = 'Plugin Update Available'
+        msg = 'Version {} of the {} plugin is now available.'.format(online_version, bk._w.plugin_name)
+        update_msgbox(title, msg)
 
     if _DEBUG_:
         print('Python sys.path', sys.path)

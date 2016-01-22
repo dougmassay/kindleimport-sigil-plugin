@@ -50,6 +50,7 @@ The core plugin files (this is where most contributors will spend their time) ar
     > plugin.py
     > plugin.xml
     > quickepub.py
+    > updatecheck.py
     > utilities.py
 
     
