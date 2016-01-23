@@ -9,7 +9,6 @@ import os
 import sys
 import socket
 from datetime import datetime, timedelta
-from pkg_resources import parse_version
 
 url = 'https://raw.githubusercontent.com/dougmassay/kindleimport-sigil-plugin/master/checkversion.xml'
 
@@ -80,7 +79,12 @@ class UpdateChecker():
         return _installed_version
 
     def is_newer(self, online_version, current_version):
-        return (parse_version(online_version) > parse_version(current_version))
+        try:
+            online_tuple = tuple(map(int, (online_version.split("."))))
+            current_tuple = tuple(map(int, (current_version.split("."))))
+        except:
+            return False
+        return online_tuple > current_tuple
 
     def update_info(self):
         _online_version = None

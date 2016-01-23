@@ -6,7 +6,7 @@
   <description>Open Kindle files for editing in Sigil</description>
   <engine>python3.4</engine>
   <engine>python2.7</engine>
-  <version>0.80.4</version>
+  <version>0.80.5</version>
   <oslist>osx,unx,win</oslist>
   <autostart>true</autostart>
   <autoclose>true</autoclose>
