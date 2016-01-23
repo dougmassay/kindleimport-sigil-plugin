@@ -16,6 +16,10 @@ url = 'https://raw.githubusercontent.com/dougmassay/kindleimport-sigil-plugin/ma
 def string_to_date(datestring):
     return datetime.strptime(datestring, "%Y-%m-%d %H:%M:%S.%f")
 
+def tuple_version(v):
+    # No aplha characters in version strings allowed here!
+    return tuple(map(int, (v.split("."))))
+
 
 class UpdateChecker():
     '''
@@ -78,14 +82,6 @@ class UpdateChecker():
                 _installed_version = m.group(1).strip()
         return _installed_version
 
-    def is_newer(self, online_version, current_version):
-        try:
-            online_tuple = tuple(map(int, (online_version.split("."))))
-            current_tuple = tuple(map(int, (current_version.split("."))))
-        except:
-            return False
-        return online_tuple > current_tuple
-
     def update_info(self):
         _online_version = None
         _current_version = self.get_current_version()
@@ -93,7 +89,8 @@ class UpdateChecker():
         # only retrieve online resource if the allotted time has passed since last check
         if (datetime.now() - self.lasttimechecked > timedelta(hours=self.delta)):
             _online_version = self.get_online_version()
-            if _online_version is not None and self.is_newer(_online_version, _current_version) and _online_version != self.lastonlineversion:
+            # if online version is newer, make sure it hasn't been seen already
+            if _online_version is not None and tuple_version(_online_version) >  tuple_version(_current_version) and _online_version != self.lastonlineversion:
                 return True, _online_version, str(datetime.now())
         return False, _online_version, str(datetime.now())
 
@@ -108,6 +105,8 @@ def main():
     sim_w = w()
     chk = UpdateChecker(tmedt, version, sim_w)
     print(chk.update_info())
+    print(tuple_version('0.3.2'))
+    print(tuple_version('0.3.2') > tuple_version('0.3.20'))
 
 if __name__ == "__main__":
     sys.exit(main())
