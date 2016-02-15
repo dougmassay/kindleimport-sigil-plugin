@@ -5,8 +5,11 @@ from __future__ import unicode_literals, division, absolute_import, print_functi
 
 import os
 import struct
+
+from compatibility_utils import PY2, bstr
+
 import kindleunpackcore.kindleunpack as _mu
-from kindleunpackcore.compatibility_utils import PY2, bstr
+
 
 if PY2:
     range = xrange
@@ -110,7 +113,10 @@ class mobiProcessor:
             src = os.path.join(outdir, 'kindlegensrc.zip')
         kf8dir = os.path.join(outdir, 'mobi8')
         kf8BaseName = os.path.splitext(os.path.basename(self.infile))[0]
+        opf = os.path.join(kf8dir, 'OEBPS', 'content.opf')
+        if not os.path.exists(opf):
+            opf = None
         epub = os.path.join(kf8dir, '{0}.epub'.format(kf8BaseName))
         if not os.path.exists(epub):
             raise Exception(_('Problem locating unpacked epub: {0}'.format(epub)))
-        return (epub, src)
+        return (epub, opf, src)

@@ -10,9 +10,11 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta
 
 
-from kindleunpackcore.compatibility_utils import PY2, unicode_str
-from kindleunpackcore.unipath import pathof
-from utilities import expanduser, file_open
+from compatibility_utils import PY2, unicode_str
+from unipath import pathof
+from epub_utils import epub_zip_up_book_contents
+
+from utilities import expanduser, file_open, tweak_opf, get_asin
 from updatecheck import UpdateChecker
 
 if PY2:
@@ -24,19 +26,21 @@ else:
     import tkinter.filedialog as tkinter_filedialog
     import tkinter.messagebox as tkinter_msgbox
 
-'''
-import inspect
-SCRIPT_DIR = os.path.normpath(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
-print (SCRIPT_DIR)
-PLUGIN_NAME = os.path.split(SCRIPT_DIR)[-1]
-print (PLUGIN_NAME)
-PLUG_DIR = os.path.dirname(SCRIPT_DIR)
-print (PLUG_DIR)
-'''
 
 _DEBUG_ = False
 
 prefs = {}
+
+@contextmanager
+def temp_epub_handle(prefix='KindleImport', suffix='.epub', delete=True):
+    import tempfile
+    fd, temp_file = tempfile.mkstemp(prefix=prefix, suffix=suffix)
+    try:
+        yield temp_file
+    finally:
+        if delete:
+            os.close(fd)
+            os.remove(temp_file)
 
 @contextmanager
 def make_temp_directory():
@@ -94,6 +98,10 @@ def run(bk):
         prefs['use_hd_images'] = True
     if 'use_src_from_dual_mobi' not in prefs:
         prefs['use_src_from_dual_mobi'] = True
+    if 'asin_for_kindlegen_plugin' not in prefs:
+        prefs['asin_for_kindlegen_plugin'] = False
+    if 'preserve_kindleunpack_meta' not in prefs:
+        prefs['preserve_kindleunpack_meta'] = False
 
     if 'last_time_checked' not in prefs:
         prefs['last_time_checked'] = str(datetime.now() - timedelta(hours=7))
@@ -145,10 +153,31 @@ def run(bk):
 
     with make_temp_directory() as temp_dir:
         if not mobionly:
-            epub, src = mp.unpackEPUB(temp_dir)
+            TWEAK = True
+            asin = None
+            epub, opf, src = mp.unpackEPUB(temp_dir)
             if src is not None and isEPUB(src) and prefs['use_src_from_dual_mobi']:
                 print ('Using included kindlegen sources.')
                 epub = src
+            else:
+                # If user requested no tweaks through preferences, use standard epub from KindleUnpack
+                if not prefs['asin_for_kindlegen_plugin'] and not prefs['preserve_kindleunpack_meta']:
+                    TWEAK = False
+                elif prefs['asin_for_kindlegen_plugin']:
+                    if opf is not None:
+                        # Get asin from metadata and put it in a dc:meta that the Kindlegen plugin can use.
+                        asin = get_asin(opf)
+                        if asin is not None:
+                            asin = unicode_str(asin)
+                    else:
+                        TWEAK = False
+                if TWEAK:
+                    # Modify the opf with the requested tweaks and build a new epub
+                    if tweak_opf(opf, asin, preserve_comments=prefs['preserve_kindleunpack_meta']):
+                        os.remove(epub)
+                        with temp_epub_handle(delete=False) as new_epub:
+                            epub_zip_up_book_contents(os.path.join(temp_dir,'mobi8'), new_epub)
+                        epub = new_epub
         else:
             from quickepub import QuickEpub
             mobidir, mobi_html, mobi_opf, mobiBaseName = mp.unpackMOBI(temp_dir)

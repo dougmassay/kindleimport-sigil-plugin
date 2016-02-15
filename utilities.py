@@ -7,7 +7,7 @@ import sys
 import os
 import re
 
-PY2 = sys.version_info[0] == 2
+from compatibility_utils import PY2
 
 if PY2:
     import codecs
@@ -70,3 +70,37 @@ def find_output_encoding(opffile):
         if match.group(1) is not None:
             return match.group(1)
         return None
+
+def tweak_opf(opffile, asin, preserve_comments=False):
+    dc = None
+    if asin is not None:
+        dc = '''<dc:identifier opf:scheme="AMAZON">%s</dc:identifier>''' % asin
+    with file_open(opffile, 'r', encoding='utf-8') as fp:
+        newopf = ''
+        for line in fp:
+            if dc is not None:
+                if line.rstrip().endswith('</dc:language>'):
+                    line = line + '\n' + dc
+            if preserve_comments:
+                line = line.replace('<!-- BEGIN INFORMATION ONLY', '')
+                line = line.replace('END INFORMATION ONLY -->', '')
+            newopf += line
+    try:
+        file_open(opffile,'wb').write(newopf.encode('utf-8'))
+    except:
+        return False
+    return True
+
+def get_asin(opffile):
+    _meta_pattern = re.compile('<meta name="ASIN" content="([^>]+)"')
+    try:
+        with file_open(opffile, 'r', encoding='utf-8') as fp:
+            opfData = fp.read()
+    except:
+        return None
+    m = _meta_pattern.search(opfData)
+    if m:
+        asin = m.group(1)
+    else:
+        return None
+    return asin
