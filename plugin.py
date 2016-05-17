@@ -152,9 +152,9 @@ def run(bk):
         mobionly = True
 
     with make_temp_directory() as temp_dir:
+        TWEAK = True
+        asin = None
         if not mobionly:
-            TWEAK = True
-            asin = None
             epub, opf, src = mp.unpackEPUB(temp_dir)
             if src is not None and isEPUB(src) and prefs['use_src_from_dual_mobi']:
                 print ('Using included kindlegen sources.')
@@ -181,6 +181,20 @@ def run(bk):
         else:
             from quickepub import QuickEpub
             mobidir, mobi_html, mobi_opf, mobiBaseName = mp.unpackMOBI(temp_dir)
+            if not prefs['asin_for_kindlegen_plugin'] and not prefs['preserve_kindleunpack_meta']:
+                TWEAK = False
+            elif prefs['asin_for_kindlegen_plugin']:
+                if mobi_opf is not None:
+                    # Get asin from metadata and put it in a dc:meta that the Kindlegen plugin can use.
+                    asin = get_asin(mobi_opf)
+                    if asin is not None:
+                        asin = unicode_str(asin)
+                    else:
+                        TWEAK = False
+            if TWEAK:
+                if not tweak_opf(mobi_opf, asin, preserve_comments=prefs['preserve_kindleunpack_meta']):
+                    print('OPF manipulation failed!')
+                    return -1
             qe = QuickEpub(mobidir, mobi_html, mobi_opf)
             epub = qe.makeEPUB()
 
