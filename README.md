@@ -5,7 +5,7 @@ Open KindleBooks in Sigil
 
 A Sigil plugin based on/wrapped around the KindleUnpack software (Python based software to unpack Amazon / Kindlegen generated ebooks).
 
-**NOTE: this plugin periodically checks for updated versions by connecting to this Github repository
+**NOTE: this plugin periodically checks for updated versions by connecting to this Github repository**
 
 Links
 =====
