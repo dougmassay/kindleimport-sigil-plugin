@@ -5,11 +5,14 @@ Open KindleBooks in Sigil
 
 A Sigil plugin based on/wrapped around the KindleUnpack software (Python based software to unpack Amazon / Kindlegen generated ebooks).
 
+**NOTE: this plugin periodically checks for updated versions by connecting to this Github repository
+
 Links
 =====
 
 * Sigil website is at <http://sigil-ebook.com>
 * Sigil support forums are at <http://www.mobileread.com/forums/forumdisplay.php?f=203>
+* The KindleImport plugin support thread on MobileRead: <http://www.mobileread.com/forums/showthread.php?t=247087>
 * The KindleUnpack python-based software can be found at <https://github.com/kevinhendricks/KindleUnpack>
 * python-patch (used to help build the plugin) can be found at <https://github.com/techtonik/python-patch>
 * KindleImport plugin MobileRead support thread: <http://www.mobileread.com/forums/showthread.php?t=247087>
