@@ -23,7 +23,7 @@ Building
 First, clone the repo:
 
     $ git clone https://github.com/dougmassay/kindleimport-sigil-plugin.git
-    
+
 Then you need to prepare the source by downloading some core files from the KindleUnpack project. I'm not going to track those files here since they're already maintained in another Git repository. There's a script in the 'setup_tools' folder that will download/patch what you need. Just cd into the 'setup_tools' folder and run the getkucore.py script with Python 2.7+ or 3.4+ (don't try to run the script from outside the 'setup_tools' folder).
 
     $ cd ./kindleimport-sigil-plugin/setup_tools
@@ -35,7 +35,7 @@ This will create a kindleunpackcore folder. You only need to prepare this folder
 To create the plugin zip file, run the buildplugin.py script (root of the repository tree) with Python (2 or 3)
 
     $python buildplugin.py
-    
+
 This will create the KindleImport_vX.X.X.zip file that can then be installed into Sigil's plugin manager.
 
 Using KindleImport
@@ -70,7 +70,7 @@ Configurable preferences (available after first run in the plugin's correspondin
 
 Get more help at the KindleImport plugin [MobileRead support thread:](http://www.mobileread.com/forums/showthread.php?t=247087)
 
-    
+
 Contributing / Modifying
 ============
 From here on out, a proficiency with developing / creating Sigil plugins is assumed.
@@ -83,15 +83,17 @@ Any changes there can be pulled into this repository by running the getkucore.py
 
 The core plugin files (this is where most contributors will spend their time) are:
 
+    > gui_utilities.py
     > mobiml2xhtml.py
     > mobi_stuff.py
+    > gui_utilities.py
     > plugin.py
     > plugin.xml
     > quickepub.py
     > updatecheck.py
     > utilities.py
 
-    
+
 Files used for building/maintaining the plugin:
 
     > buildplugin.py  -- this is used to build the plugin.

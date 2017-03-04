@@ -18,6 +18,7 @@ PLUGIN_NAME = 'KindleImport'
 TEMP_DIR = os.path.join(SCRIPT_DIR, PLUGIN_NAME)
 
 PLUGIN_FILES = ['kindleunpackcore',
+            'gui_utilities.py',
             'mobiml2xhtml.py',
             'mobi_stuff.py',
             'plugin.py',

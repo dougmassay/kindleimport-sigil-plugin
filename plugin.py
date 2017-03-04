@@ -15,21 +15,15 @@ from unipath import pathof
 from epub_utils import epub_zip_up_book_contents
 
 from utilities import expanduser, file_open, tweak_opf, get_asin
+from gui_utilities import fileChooser, update_msgbox
 from updatecheck import UpdateChecker
-
-if PY2:
-    from Tkinter import Tk
-    import tkFileDialog as tkinter_filedialog
-    import tkMessageBox as tkinter_msgbox
-else:
-    from tkinter import Tk
-    import tkinter.filedialog as tkinter_filedialog
-    import tkinter.messagebox as tkinter_msgbox
 
 
 _DEBUG_ = False
 
 prefs = {}
+
+GUI = None
 
 @contextmanager
 def temp_epub_handle(prefix='KindleImport', suffix='.epub', delete=True):
@@ -64,29 +58,16 @@ def isEPUB(zip):
         else:
             return False
 
-def fileChooser():
-    localRoot = Tk()
-    localRoot.withdraw()
-    file_opt = {}
-    file_opt['parent'] = None
-    file_opt['title']= 'Select Kindlebook file'
-    file_opt['defaultextension'] = '.azw3'
-    # retrieve the initialdir from JSON prefs
-    file_opt['initialdir'] = unicode_str(prefs['use_file_path'], 'utf-8')
-    file_opt['multiple'] = False
-    file_opt['filetypes'] = [('Kindlebooks', ('.azw', '.azw3', '.prc', '.mobi'))]
-    localRoot.quit()
-    return tkinter_filedialog.askopenfilename(**file_opt)
-
-def update_msgbox(title, msg):
-    localRoot = Tk()
-    localRoot.withdraw()
-    localRoot.option_add('*font', 'Helvetica -12')
-    localRoot.quit()
-    return tkinter_msgbox.showinfo(title, msg)
 
 def run(bk):
     global prefs
+    global GUI
+
+    if bk.launcher_version() >= 20170115:
+        GUI = 'pyqt'
+    else:
+        GUI = 'tkinter'
+
     prefs = bk.getPrefs()
 
     # set default preference values
@@ -117,13 +98,15 @@ def run(bk):
     if update_available:
         title = 'Plugin Update Available'
         msg = 'Version {} of the {} plugin is now available.'.format(online_version, bk._w.plugin_name)
-        update_msgbox(title, msg)
+        #update_msgbox(title, msg)
+        update_msgbox(title, msg, GUI)
 
     if _DEBUG_:
         print('Python sys.path', sys.path)
         print('Default AZW3 epub version:', prefs['azw3_epub_version'])
 
-    inpath = fileChooser()
+    #inpath = fileChooser()
+    inpath = fileChooser(prefs['use_file_path'], GUI)
     if inpath == '' or not os.path.exists(inpath):
         print('No input file selected!')
         bk.savePrefs(prefs)
