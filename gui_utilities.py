@@ -40,7 +40,7 @@ def fileChooser(startfolder, gui='tkinter'):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(w,'Select Kindlebook file', unicode_str(startfolder, 'utf-8'),
-                                                  'Kindlebooks (*.azw, *.azw3, *.prc, *.mobi)', options=options)
+                                                  'Kindlebooks (*.azw *.azw3 *.prc *.mobi)', options=options)
         return fileName
 
 def update_msgbox(title, msg, gui='tkinter'):
