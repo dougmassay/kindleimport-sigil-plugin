@@ -55,7 +55,7 @@ class QuickEpub(object):
 
     def makeEPUB(self):
         out_enc = find_output_encoding(self.opffile)
-        print ('Markup encoded as:', out_enc)
+        print('Markup encoded as:', out_enc)
         ml2html = MobiMLConverter(self.htmlfile, out_enc)
         xhtmlstr, css, cssname = ml2html.processml()
         file_open(self.htmlfile,'wb').write(xhtmlstr.encode('utf-8'))

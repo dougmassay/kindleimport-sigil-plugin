@@ -50,7 +50,7 @@ class MobiMLConverter(object):
             for enc in encodings:
                 try:
                     self.wipml = file_open(self.filename, 'r', encoding=enc).read()
-                    print ('Guessing markup character encoding')
+                    print('Guessing markup character encoding')
                     break
                 except UnicodeDecodeError:
                     next
@@ -259,18 +259,18 @@ class MobiMLConverter(object):
                     self.path.append(tname)
                 elif ttype == 'end':
                     if tname != self.path[-1]:
-                        print ('improper nesting: ', self.path, tname, ttype)
+                        print('improper nesting: ', self.path, tname, ttype)
                         if tname not in self.path:
                             # handle case of end tag with no beginning by injecting empty begin tag
                             taginfo = ('begin', tname, None)
                             htmlstr += self.processtag(taginfo)
-                            print ("     - fixed by injecting empty start tag ", tname)
+                            print("     - fixed by injecting empty start tag ", tname)
                             self.path.append(tname)
                         elif len(self.path) >  1 and tname == self.path[-2]:
                             # handle case of dangling missing end
                             taginfo = ('end', self.path[-1], None)
                             htmlstr += self.processtag(taginfo)
-                            print ("     - fixed by injecting end tag ", self.path[-1])
+                            print("     - fixed by injecting end tag ", self.path[-1])
                             self.path.pop()
                     self.path.pop()
 

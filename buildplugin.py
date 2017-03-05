@@ -36,6 +36,7 @@ def findVersion():
         return '{}'.format(match.group(1))
     return '0.X.X'
 
+
 # Find version info from plugin.xml and build zip file name from it
 VERS_INFO =  findVersion()
 ARCHIVE_NAME = os.path.join(SCRIPT_DIR, '{}_v{}.zip'.format(PLUGIN_NAME, VERS_INFO))
@@ -62,7 +63,7 @@ def removePreviousTmp(rmzip=False):
         shutil.rmtree(TEMP_DIR)
 
     if rmzip:  # Remove zip file if indicated.
-        print ('Removing any current zip file ...')
+        print('Removing any current zip file ...')
         if os.path.exists(ARCHIVE_NAME):
             os.remove(ARCHIVE_NAME)
 
@@ -80,14 +81,15 @@ def ignore_in_dirs(base, items, ignored_dirs=None):
                 ans.append(name)
     return ans
 
+
 if __name__ == "__main__":
     print('Removing any previous build leftovers ...')
     removePreviousTmp(rmzip=True)
 
-    print ('Creating temp {} directory ...'.format(PLUGIN_NAME))
+    print('Creating temp {} directory ...'.format(PLUGIN_NAME))
     os.mkdir(TEMP_DIR)
 
-    print ('Copying everything to temp {} directory ...'.format(PLUGIN_NAME))
+    print('Copying everything to temp {} directory ...'.format(PLUGIN_NAME))
     for entry in PLUGIN_FILES:
         entry_path = os.path.join(SCRIPT_DIR, entry)
         if os.path.exists(entry_path) and os.path.isdir(entry_path):
@@ -97,12 +99,12 @@ if __name__ == "__main__":
         else:
             sys.exit('Couldn\'t copy necessary plugin files!')
 
-    print ('Creating {} ...'.format(os.path.basename(ARCHIVE_NAME)))
+    print('Creating {} ...'.format(os.path.basename(ARCHIVE_NAME)))
     outzip = zipfile.ZipFile(ARCHIVE_NAME, 'w')
     zipUpDir(outzip, SCRIPT_DIR, os.path.basename(TEMP_DIR))
     outzip.close()
 
-    print ('Plugin successfully created!')
+    print('Plugin successfully created!')
 
     print('Removing temp build directory ...')
     removePreviousTmp()

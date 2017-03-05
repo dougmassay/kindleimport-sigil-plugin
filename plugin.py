@@ -98,21 +98,21 @@ def run(bk):
     if update_available:
         title = 'Plugin Update Available'
         msg = 'Version {} of the {} plugin is now available.'.format(online_version, bk._w.plugin_name)
-        #update_msgbox(title, msg)
+        # update_msgbox(title, msg)
         update_msgbox(title, msg, GUI)
 
     if _DEBUG_:
         print('Python sys.path', sys.path)
         print('Default AZW3 epub version:', prefs['azw3_epub_version'])
 
-    #inpath = fileChooser()
+    # inpath = fileChooser()
     inpath = fileChooser(prefs['use_file_path'], GUI)
     if inpath == '' or not os.path.exists(inpath):
         print('No input file selected!')
         bk.savePrefs(prefs)
         return 0
 
-    print ('Path to Kindlebook {0}'.format(inpath))
+    print('Path to Kindlebook {0}'.format(inpath))
     from mobi_stuff import mobiProcessor, topaz
     if topaz(inpath):
         print('Kindlebook is in Topaz format: can\'t open!')
@@ -140,7 +140,7 @@ def run(bk):
         if not mobionly:
             epub, opf, src = mp.unpackEPUB(temp_dir)
             if src is not None and isEPUB(src) and prefs['use_src_from_dual_mobi']:
-                print ('Using included kindlegen sources.')
+                print('Using included kindlegen sources.')
                 epub = src
             else:
                 # If user requested no tweaks through preferences, use standard epub from KindleUnpack
@@ -183,7 +183,7 @@ def run(bk):
 
         # Save prefs to json
         bk.savePrefs(prefs)
-        print ('Path to epub or src {0}'.format(epub))
+        print('Path to epub or src {0}'.format(epub))
         with file_open(epub,'rb')as fp:
             data = fp.read()
         bk.addotherfile('dummy.epub', data)
@@ -191,8 +191,9 @@ def run(bk):
     return 0
 
 def main():
-    print ('I reached main when I should not have\n')
+    print('I reached main when I should not have\n')
     return -1
+
 
 if __name__ == "__main__":
     sys.exit(main())

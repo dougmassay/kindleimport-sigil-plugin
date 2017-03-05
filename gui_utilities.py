@@ -14,11 +14,11 @@ def fileChooser(startfolder, gui='tkinter'):
         if PY2:
             from Tkinter import Tk
             import tkFileDialog as tkinter_filedialog
-            import tkMessageBox as tkinter_msgbox
+            # import tkMessageBox as tkinter_msgbox
         else:
             from tkinter import Tk
             import tkinter.filedialog as tkinter_filedialog
-            import tkinter.messagebox as tkinter_msgbox
+            # import tkinter.messagebox as tkinter_msgbox
 
         localRoot = Tk()
         localRoot.withdraw()
@@ -34,7 +34,7 @@ def fileChooser(startfolder, gui='tkinter'):
         return tkinter_filedialog.askopenfilename(**file_opt)
     elif gui == 'pyqt':
         from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog
-        
+
         app = QApplication(sys.argv)
         w = QWidget()
         options = QFileDialog.Options()
@@ -58,7 +58,7 @@ def update_msgbox(title, msg, gui='tkinter'):
         return tkinter_msgbox.showinfo(title, msg)
     elif gui == 'pyqt':
         from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
-        
+
         app = QApplication(sys.argv)
         w = QWidget()
         return QMessageBox.information(w, title, msg)
