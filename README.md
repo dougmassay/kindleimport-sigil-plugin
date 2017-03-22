@@ -112,11 +112,11 @@ Feel free to fork the repository and submit pull requests (or just use it privat
 License Information
 =======
 
-###KindleImport (the Sigil plugin)
+### KindleImport (the Sigil plugin)
 
     Licensed under the GPLv3.
 
-###[KindleUnpack](https://github.com/kevinhendricks/KindleUnpack)
+### [KindleUnpack](https://github.com/kevinhendricks/KindleUnpack)
 
 Based on initial mobipocket version Copyright © 2009 Charles M. Hannum <root@ihack.net>
 Extensive Extensions and Improvements Copyright © 2009-2014
@@ -125,7 +125,7 @@ This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, version 3.
 
-###[python-patch](https://github.com/techtonik/python-patch)
+### [python-patch](https://github.com/techtonik/python-patch)
 
 Available under the terms of the [MIT license](http://opensource.org/licenses/mit-license.php)
 
