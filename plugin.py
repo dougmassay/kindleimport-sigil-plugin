@@ -63,18 +63,12 @@ def run(bk):
     global prefs
     global GUI
 
-    prefs = bk.getPrefs()
-
-    if 'force_tkinter_gui' not in prefs:
-        prefs['force_tkinter_gui'] = False
-        # immediately generate a json prefs file so the
-        # force_tkinter_gui setting can be edited if need be.
-        bk.savePrefs(prefs)
-
-    if bk.launcher_version() >= 20170115 and not prefs['force_tkinter_gui']:
+    if bk.launcher_version() >= 20170115:
         GUI = 'pyqt'
     else:
         GUI = 'tkinter'
+
+    prefs = bk.getPrefs()
 
     # set default preference values
     if 'use_file_path' not in prefs:
