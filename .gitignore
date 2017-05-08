@@ -45,3 +45,4 @@ kindleunpackcore/
 
 # Zip files (plugin releases)
 *.zip
+*.tar.gz
