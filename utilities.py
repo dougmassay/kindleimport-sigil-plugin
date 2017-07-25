@@ -71,10 +71,14 @@ def find_output_encoding(opffile):
             return match.group(1)
         return None
 
-def tweak_opf(opffile, asin, preserve_comments=False):
+def tweak_opf(opffile, asin, epub_version="2", preserve_comments=False):
     dc = None
     if asin is not None:
-        dc = '''<dc:identifier opf:scheme="AMAZON">%s</dc:identifier>''' % asin
+        if epub_version == "2":
+            dc = '''<dc:identifier opf:scheme="AMAZON">%s</dc:identifier>''' % asin
+        elif epub_version == "3":
+            dc = '''<dc:identifier>urn:AMAZON:%s</dc:identifier>''' % asin
+
     with file_open(opffile, 'r', encoding='utf-8') as fp:
         newopf = ''
         for line in fp:

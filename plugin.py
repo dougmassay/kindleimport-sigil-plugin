@@ -156,7 +156,7 @@ def run(bk):
                         TWEAK = False
                 if TWEAK:
                     # Modify the opf with the requested tweaks and build a new epub
-                    if tweak_opf(opf, asin, preserve_comments=prefs['preserve_kindleunpack_meta']):
+                    if tweak_opf(opf, asin, epub_version=prefs['azw3_epub_version'], preserve_comments=prefs['preserve_kindleunpack_meta']):
                         os.remove(epub)
                         with temp_epub_handle(delete=False) as new_epub:
                             epub_zip_up_book_contents(os.path.join(temp_dir,'mobi8'), new_epub)
