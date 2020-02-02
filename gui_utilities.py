@@ -8,8 +8,46 @@ import sys
 from compatibility_utils import PY2
 from compatibility_utils import unicode_str
 
+def dark_palette(bk, app):
+    supports_theming = (bk.launcher_version() >= 20200117)
+    if not supports_theming:
+        return
+    if bk.colorMode() != "dark":
+        return
+    try:
+        from PyQt5.QtCore import Qt
+        from PyQt5.QtGui import QColor, QPalette
+        from PyQt5.QtWidgets import QStyleFactory
+    except ImportError:
+        return
 
-def fileChooser(startfolder, gui='tkinter'):
+    p = QPalette()
+    sigil_colors = bk.color
+    dark_color = QColor(sigil_colors("Window"))
+    disabled_color = QColor(127,127,127)
+    dark_link_color = QColor(108, 180, 238)
+    text_color = QColor(sigil_colors("Text"))
+    p.setColor(p.Window, dark_color)
+    p.setColor(p.WindowText, text_color)
+    p.setColor(p.Base, QColor(sigil_colors("Base")))
+    p.setColor(p.AlternateBase, dark_color)
+    p.setColor(p.ToolTipBase, dark_color)
+    p.setColor(p.ToolTipText, text_color)
+    p.setColor(p.Text, text_color)
+    p.setColor(p.Disabled, p.Text, disabled_color)
+    p.setColor(p.Button, dark_color)
+    p.setColor(p.ButtonText, text_color)
+    p.setColor(p.Disabled, p.ButtonText, disabled_color)
+    p.setColor(p.BrightText, Qt.red)
+    p.setColor(p.Link, dark_link_color)
+    p.setColor(p.Highlight, QColor(sigil_colors("Highlight")))
+    p.setColor(p.HighlightedText, QColor(sigil_colors("HighlightedText")))
+    p.setColor(p.Disabled, p.HighlightedText, disabled_color)
+
+    app.setStyle(QStyleFactory.create("Fusion"))
+    app.setPalette(p)
+
+def fileChooser(startfolder, bk, gui='tkinter'):
     if gui == 'tkinter':
         if PY2:
             from Tkinter import Tk
@@ -36,6 +74,7 @@ def fileChooser(startfolder, gui='tkinter'):
         from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog
 
         app = QApplication(sys.argv)
+        dark_palette(bk, app)
         w = QWidget()
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
@@ -43,7 +82,7 @@ def fileChooser(startfolder, gui='tkinter'):
                                                   'Kindlebooks (*.azw *.azw3 *.prc *.mobi)', options=options)
         return fileName
 
-def update_msgbox(title, msg, gui='tkinter'):
+def update_msgbox(title, msg, bk, gui='tkinter'):
     if gui == 'tkinter':
         if PY2:
             from Tkinter import Tk
@@ -60,5 +99,6 @@ def update_msgbox(title, msg, gui='tkinter'):
         from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
 
         app = QApplication(sys.argv)
+        dark_palette(bk, app)
         w = QWidget()
         return QMessageBox.information(w, title, msg)

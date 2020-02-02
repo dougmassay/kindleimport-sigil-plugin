@@ -99,14 +99,14 @@ def run(bk):
         title = 'Plugin Update Available'
         msg = 'Version {} of the {} plugin is now available.'.format(online_version, bk._w.plugin_name)
         # update_msgbox(title, msg)
-        update_msgbox(title, msg, GUI)
+        update_msgbox(title, msg, bk, GUI)
 
     if _DEBUG_:
         print('Python sys.path', sys.path)
         print('Default AZW3 epub version:', prefs['azw3_epub_version'])
 
     # inpath = fileChooser()
-    inpath = fileChooser(prefs['use_file_path'], GUI)
+    inpath = fileChooser(prefs['use_file_path'], bk, GUI)
     if inpath == '' or not os.path.exists(inpath):
         print('No input file selected!')
         bk.savePrefs(prefs)
