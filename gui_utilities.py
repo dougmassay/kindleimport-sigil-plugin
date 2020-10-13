@@ -4,9 +4,11 @@
 from __future__ import unicode_literals, division, absolute_import, print_function
 
 import sys
+import os
 
 from compatibility_utils import PY2
 from compatibility_utils import unicode_str
+from utilities import iswindows, ismacos
 
 def dark_palette(bk, app):
     supports_theming = (bk.launcher_version() >= 20200117)
@@ -71,8 +73,16 @@ def fileChooser(startfolder, bk, gui='tkinter'):
         localRoot.quit()
         return tkinter_filedialog.askopenfilename(**file_opt)
     elif gui == 'pyqt':
+        from PyQt5.QtCore import QTimer
         from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog
 
+        if not ismacos:
+            setup_highdpi(bk._w.highdpi)
+        setup_ui_font(bk._w.uifont)
+        if not ismacos and not iswindows:
+            # Qt 5.10.1 on Linux resets the global font on first event loop tick.
+            # So workaround it by setting the font once again in a timer.
+            QTimer.singleShot(0, lambda : setup_ui_font(bk._w.uifont))
         app = QApplication(sys.argv)
         dark_palette(bk, app)
         w = QWidget()
@@ -102,3 +112,28 @@ def update_msgbox(title, msg, bk, gui='tkinter'):
         dark_palette(bk, app)
         w = QWidget()
         return QMessageBox.information(w, title, msg)
+
+def setup_highdpi(highdpi):
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import QApplication
+
+    has_env_setting = False
+    env_vars = ('QT_AUTO_SCREEN_SCALE_FACTOR', 'QT_SCALE_FACTOR', 'QT_SCREEN_SCALE_FACTORS', 'QT_DEVICE_PIXEL_RATIO')
+    for v in env_vars:
+        if os.environ.get(v):
+            has_env_setting = True
+            break
+    if highdpi == 'on' or (highdpi == 'detect' and not has_env_setting):
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    elif highdpi == 'off':
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, False)
+        for p in env_vars:
+            os.environ.pop(p, None)
+
+def setup_ui_font(font_str):
+    from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtGui import QFont
+
+    font = QFont()
+    font.fromString(font_str)
+    QApplication.setFont(font)

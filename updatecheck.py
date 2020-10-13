@@ -44,7 +44,7 @@ class UpdateChecker():
             sock = socket.create_connection(('8.8.8.8', 53), 1)
             sock.close()
             return True
-        except:
+        except Exception:
             pass
         return False
 
@@ -66,7 +66,7 @@ class UpdateChecker():
                 m = _version_pattern.search(the_page)
                 if m:
                     _online_version = (m.group(1).strip())
-            except:
+            except Exception:
                 pass
 
         return _online_version

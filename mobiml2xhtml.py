@@ -483,7 +483,7 @@ class MobiMLConverter(object):
                             nval = float(val[:-2])
                             nval *= 16 * (168.451/72)  # Assume this was set using the Kindle profile
                             tattr[attr] = "%dpx"%int(nval)
-                        except:
+                        except Exception:
                             del tattr[attr]
                     elif val.lower().endswith('%'):
                         del tattr[attr]

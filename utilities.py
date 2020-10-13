@@ -9,6 +9,10 @@ import re
 
 from compatibility_utils import PY2
 
+_plat = sys.platform.lower()
+iswindows = 'win32' in _plat or 'win64' in _plat
+ismacos = isosx = 'darwin' in _plat
+
 if PY2:
     import codecs
     file_open = codecs.open
@@ -91,7 +95,7 @@ def tweak_opf(opffile, asin, epub_version="2", preserve_comments=False):
             newopf += line
     try:
         file_open(opffile,'wb').write(newopf.encode('utf-8'))
-    except:
+    except Exception:
         return False
     return True
 
@@ -100,7 +104,7 @@ def get_asin(opffile):
     try:
         with file_open(opffile, 'r', encoding='utf-8') as fp:
             opfData = fp.read()
-    except:
+    except Exception:
         return None
     m = _meta_pattern.search(opfData)
     if m:

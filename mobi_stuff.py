@@ -29,13 +29,13 @@ class SectionizerLight:
             self.ident = self.palmheader[0x3C:0x3C+8]
         try:
             self.num_sections, = struct.unpack_from(b'>H', self.palmheader, 76)
-        except:
+        except Exception:
             return
         self.filelength = len(self.data)
         try:
             sectionsdata = struct.unpack_from(bstr('>%dL' % (self.num_sections*2)), self.data, 78) + (self.filelength, 0)
             self.sectionoffsets = sectionsdata[::2]
-        except:
+        except Exception:
             pass
 
     def loadSection(self, section):
