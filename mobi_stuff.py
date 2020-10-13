@@ -12,7 +12,7 @@ import kindleunpackcore.kindleunpack as _mu
 
 
 if PY2:
-    range = xrange
+    range = xrange  # noqa 
 
 def topaz(f):
     with open(f,'rb') as kindle_file:

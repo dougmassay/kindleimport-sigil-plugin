@@ -30,8 +30,8 @@ environment:
 before_build:
 - cmd: |-
     set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
-#    python -m pip install --upgrade pip
-#    pip3.7 install six
+    python -m pip install --upgrade pip
+    pip3.7 install flake8
 
     
 build_script:
@@ -41,7 +41,11 @@ build_script:
     python getkucore.py
     cd ../
     python buildplugin
- 
+
+test_script:
+- cmd: |-
+    flake8 buildplugin
+    flake8 . 
 
 artifacts:
   - path: '*.zip'
