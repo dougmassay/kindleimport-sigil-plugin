@@ -75,6 +75,7 @@ def fileChooser(startfolder, bk, gui='tkinter'):
     elif gui == 'pyqt':
         from PyQt5.QtCore import QTimer
         from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog
+        from PyQt5.QtGui import QIcon
 
         if not ismacos:
             setup_highdpi(bk._w.highdpi)
@@ -84,6 +85,8 @@ def fileChooser(startfolder, bk, gui='tkinter'):
             # So workaround it by setting the font once again in a timer.
             QTimer.singleShot(0, lambda : setup_ui_font(bk._w.uifont))
         app = QApplication(sys.argv)
+        icon = os.path.join(bk._w.plugin_dir, bk._w.plugin_name, 'plugin.png')
+        app.setWindowIcon(QIcon(icon))
         dark_palette(bk, app)
         w = QWidget()
         options = QFileDialog.Options()

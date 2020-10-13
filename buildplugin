@@ -23,6 +23,7 @@ PLUGIN_FILES = ['kindleunpackcore',
             'mobi_stuff.py',
             'plugin.py',
             'plugin.xml',
+            'plugin.png',
             'quickepub.py',
             'updatecheck.py',
             'utilities.py']
