@@ -78,12 +78,21 @@ def fileChooser(startfolder, bk, gui='tkinter'):
         from PyQt5.QtGui import QIcon
 
         if not ismacos:
-            setup_highdpi(bk._w.highdpi)
-        setup_ui_font(bk._w.uifont)
+            try:
+                setup_highdpi(bk._w.highdpi)
+            except Exception:
+                pass
+        try:
+            setup_ui_font(bk._w.uifont)
+        except Exception:
+            pass
         if not ismacos and not iswindows:
             # Qt 5.10.1 on Linux resets the global font on first event loop tick.
             # So workaround it by setting the font once again in a timer.
-            QTimer.singleShot(0, lambda : setup_ui_font(bk._w.uifont))
+            try:
+                QTimer.singleShot(0, lambda : setup_ui_font(bk._w.uifont))
+            except Exception:
+                pass
         app = QApplication(sys.argv)
         icon = os.path.join(bk._w.plugin_dir, bk._w.plugin_name, 'plugin.png')
         app.setWindowIcon(QIcon(icon))

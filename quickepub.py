@@ -8,6 +8,7 @@ import zipfile
 from utilities import file_open, find_output_encoding
 from kindleunpackcore.compatibility_utils import unicode_str
 from mobiml2xhtml import MobiMLConverter
+import sigil_gumbo_bs4_adapter as gumbo_bs4
 
 has_cssutils = True
 try:
@@ -38,6 +39,15 @@ class QuickEpub(object):
         fileout = os.path.join(self.metainf,'container.xml')
         file_open(fileout,'wb').write(container.encode('utf-8'))
 
+    def removeThumbnailImage(self, img_dir):
+        if not os.path.isdir(img_dir):
+            return
+        img_list = os.listdir(img_dir)
+        for img_file in img_list:
+            if img_file.startswith('thumb'):
+                os.remove(os.path.join(img_dir, img_file))
+                break
+
     # recursive zip creation support routine
     def zipUpDir(self, myzip, tdir, localname):
         currentdir = tdir
@@ -58,6 +68,8 @@ class QuickEpub(object):
         print('Markup encoded as:', out_enc)
         ml2html = MobiMLConverter(self.htmlfile, out_enc)
         xhtmlstr, css, cssname = ml2html.processml()
+        soup = gumbo_bs4.parse(xhtmlstr)
+        xhtmlstr = soup.prettyprint_xhtml()
         file_open(self.htmlfile,'wb').write(xhtmlstr.encode('utf-8'))
         if has_cssutils:
             sheet = cssutils.parseString(css)
@@ -92,6 +104,7 @@ class QuickEpub(object):
 
         self.zipUpDir(outzip,self.outdir,'META-INF')
         if os.path.exists(os.path.join(self.outdir,'Images')):
+            self.removeThumbnailImage(os.path.join(self.outdir,'Images'))
             self.zipUpDir(outzip,self.outdir,'Images')
 
         outzip.write(self.htmlfile, os.path.basename(self.htmlfile), zipfile.ZIP_DEFLATED)
