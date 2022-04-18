@@ -36,14 +36,12 @@ def fileChooser(startfolder, bk, gui='tkinter'):
         localRoot.quit()
         return tkinter_filedialog.askopenfilename(**file_opt)
     elif gui == 'pyqt':
-        from plugin_utils import Qt, QtCore, QtGui, QtWidgets
+        from plugin_utils import QtWidgets
         from plugin_utils import PluginApplication
-        #from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog
-        #from PyQt5.QtGui import QIcon
 
         icon = os.path.join(bk._w.plugin_dir, bk._w.plugin_name, 'plugin.png')
         mdp = True if iswindows else False
-        app = PluginApplication(sys.argv, bk, app_icon=icon, match_dark_palette=mdp)
+        app = PluginApplication(sys.argv, bk, app_icon=icon, match_dark_palette=mdp)  # noqa
         w = QtWidgets.QWidget()
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
@@ -65,10 +63,10 @@ def update_msgbox(title, msg, bk, gui='tkinter'):
         localRoot.quit()
         return tkinter_msgbox.showinfo(title, msg)
     elif gui == 'pyqt':
-        #from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
-        #from plugin_utils import Qt, QtCore, QtGui, QtWidgets
         from plugin_utils import QtWidgets, PluginApplication
 
-        app = PluginApplication(sys.argv, bk)
+        icon = os.path.join(bk._w.plugin_dir, bk._w.plugin_name, 'plugin.png')
+        mdp = True if iswindows else False
+        app = PluginApplication(sys.argv, bk, app_icon=icon, match_dark_palette=mdp)  # noqa
         w = QtWidgets.QWidget()
         return QtWidgets.QMessageBox.information(w, title, msg)
