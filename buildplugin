@@ -26,7 +26,8 @@ PLUGIN_FILES = ['kindleunpackcore',
             'plugin.png',
             'quickepub.py',
             'updatecheck.py',
-            'utilities.py']
+            'utilities.py',
+            'plugin_utils.py']
 
 def findVersion():
     _version_pattern = re.compile(r'<version>([^<]*)</version>')
